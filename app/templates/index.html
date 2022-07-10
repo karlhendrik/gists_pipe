@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gists Pipe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+<body>
+    <div id="background"> </div>
+    <div class="container">
+        <!-- Username Alert -->
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert" id="alert-username">
+            Please enter username!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- Create alert with danger -->
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert" id="alert-no-gists">
+            This Github user does not have any gists!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="row">
+            <div class="col-md-10 mb-3">
+                <h1 style="color: whitesmoke"><i class="bi bi-search"></i> Gists Pipe</h1>
+                <!-- Create a subtitle -->
+                <p class="lead" style="color: whitesmoke;">
+                    This is a simple app that fetches user gists from Github and allows you to push Gist to PipeDrive.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="gist-input" placeholder="Enter a Github Username" aria-label="Enter a Github Username" aria-describedby="button-addon2">
+                    <button class="btn btn-secondary" type="submit" id="gist-submit" onclick="getUserGists()">Search</button>
+                  </div>
+            </div>
+        </div>
+    <!-- List of the Gists in a table-->
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="color: whitesmoke;">Filename</th>
+                            <th style="color: whitesmoke;">Created At</th>
+                            <th style="color: whitesmoke;">Filetype</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="gist-list">
+                    </tbody>
+                </table>
+            </div>
+     
+
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/main.js"></script>
+</body>
+</html>

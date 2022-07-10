@@ -1,0 +1,16 @@
+
+body {
+    background-image: url('../img/background3.svg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+ }
+
+
+#alert-username, #alert-no-gists{
+    display: none;
+}
+
+#gist-list{
+    background-color:rgba(0, 0, 0, 0.3);
+}
