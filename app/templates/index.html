@@ -23,6 +23,11 @@
             This Github user does not have any gists!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        <!-- Create alert with danger -->
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert" id="alert-watch">
+            You are not watching Gists!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="row">
             <div class="col-md-10 mb-3">
                 <h1 style="color: whitesmoke"><i class="bi bi-search"></i> Gists Pipe</h1>
@@ -38,6 +43,12 @@
                     <input type="text" class="form-control" id="gist-input" placeholder="Enter a Github Username" aria-label="Enter a Github Username" aria-describedby="button-addon2">
                     <button class="btn btn-secondary" type="submit" id="gist-submit" onclick="getUserGists()">Search</button>
                   </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Align buttons to center -->
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-info" id="watch-button" onclick="watchGists()">Watch for Gists</button>
             </div>
         </div>
     <!-- List of the Gists in a table-->

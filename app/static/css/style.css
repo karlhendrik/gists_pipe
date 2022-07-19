@@ -7,7 +7,7 @@ body {
  }
 
 
-#alert-username, #alert-no-gists{
+#alert-username, #alert-no-gists, #watch-button, #alert-watch{
     display: none;
 }
 

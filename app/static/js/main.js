@@ -7,40 +7,13 @@ function getUserGists(){
         let user = document.getElementById('gist-input').value;
         if (user) {
             getGists(user);
+            document.querySelector('#watch-button').style.display = 'inline-block';
         } else {
             document.getElementById('alert-username').style.display = 'block';
         }
 
     });
 }
-
-document.getElementById('gist-list').addEventListener('click', function(e){
-    var gistID = e.target.dataset.id;
-    var gistOwner = e.target.dataset.owner;
-
-    fetch('http://localhost:8000/api/v1/deals', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            title: gistID + ' - ' + gistOwner,
-            pipeline_id : 1,
-
-        })
-    }).then(function(response) {
-        if (response.ok) {
-            console.log('Deal created');
-            return response.json();
-        } else {
-            throw new Error('Network response was not ok.');
-        }
-    }).then(function(data) {
-        console.log(data);
-    }).catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
-    });
-});
 
 function getGists(user) {
     // Create a request using fetch
@@ -82,5 +55,70 @@ function getGists(user) {
             console.log('There has been a problem with your fetch operation: ' + error.message);
         });
 
+    
+
         
 }
+
+function watchGists(){
+    let user = document.getElementById('gist-input').value;
+    document.querySelector('#alert-watch').style.display = 'block';
+    
+    fetch('http://localhost:8000/api/v1/watch?username=' + user, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(function(response) {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Network response was not ok.');
+        }
+    }
+    ).then(function(data) {
+        document.getElementById('alert-watch').innerHTML = data.message;
+        document.getElementById('watch-button').innerHTML = 'Waiting for changes...';
+
+        // Set timer to retry request in 3 hours
+        setTimeout(function() {
+            watchGists();
+            getGists(user);
+            if(data.message === 'Changes detected for user ' + user){
+                document.getElementById('alert-watch').innerHTML = data.message;
+            }
+        }
+        , 60000);
+    }
+    ).catch(function(error) {
+        console.log('There has been a problem with fetch operation: ' + error.message);
+    });
+}
+
+document.getElementById('gist-list').addEventListener('click', function(e){
+    var gistID = e.target.dataset.id;
+    var gistOwner = e.target.dataset.owner;
+
+    fetch('http://localhost:8000/api/v1/deals', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title: gistID + ' - ' + gistOwner,
+            pipeline_id : 1,
+
+        })
+    }).then(function(response) {
+        if (response.ok) {
+            console.log('Deal created');
+            return response.json();
+        } else {
+            throw new Error('Network response was not ok.');
+        }
+    }).then(function(data) {
+        console.log(data);
+    }).catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+    });
+});
