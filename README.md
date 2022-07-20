@@ -2,6 +2,8 @@
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=round)](https://github.com/karlhendrik/gists_pipe/issues)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![build-status](https://api.travis-ci.com/karlhendrik/gists_pipe.svg?branch=main)](https://www.travis-ci.com)
+
 
 Gists Pipe is a simple application to fetch user Gists from Github and push each Gist to PipeDrive.
 
