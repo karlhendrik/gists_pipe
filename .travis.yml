@@ -12,18 +12,14 @@ before_install:
 - cp ./deploy_key ~/.ssh/deploy_rsa
 - chmod 600 ~/.ssh/deploy_rsa
 - ssh-add ~/.ssh/deploy_rsa
-# build:
-# - provider: script
-#   skip_cleanup: true
-#   script:
-#   - git clone -b main --depth 1
-#   - git-lfs install
-#   - git-lfs fetch
-#   - pip install -r app/requirements.txt
-#   - cd app
-#   - pytest
-#   on:
-#     branch: main
+
+install:
+  - pip install -r app/requirements.txt
+
+test:
+  - cd app
+  - pytest
+
 deploy:
 - provider: script
   skip_cleanup: true
