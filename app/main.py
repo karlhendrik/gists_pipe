@@ -25,7 +25,6 @@ except Exception as e:
 # Initialize FastAPI and environment variables
 app = FastAPI()
 load_dotenv()
-
 GITHUB_API = os.getenv('GITHUB_API')
 PIPEDRIVE_API = os.getenv('PIPEDRIVE_API')
 VERSION=os.getenv('VERSION')
