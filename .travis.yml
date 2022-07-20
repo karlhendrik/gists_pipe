@@ -1,7 +1,8 @@
 language: python
 python:
   - "3.9"
-sudo: false
+os: linux
+dist: focal
 addons:
   ssh_known_hosts:
   - 65.21.54.162
@@ -21,8 +22,5 @@ test:
   - pytest
 
 deploy:
-- provider: script
-  skip_cleanup: true
-  script: bash deploy.sh
-  on:
-    branch: main
+  - bash deploy.sh
+
