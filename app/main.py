@@ -1,6 +1,3 @@
-import json
-import mimetypes
-from urllib import response
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -32,6 +29,7 @@ load_dotenv()
 GITHUB_API = os.getenv('GITHUB_API')
 PIPEDRIVE_API = os.getenv('PIPEDRIVE_API')
 VERSION=os.getenv('VERSION')
+COMPANY_NAME=os.getenv('COMPANY_NAME')
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -79,7 +77,7 @@ async def store_gists(username: str):
             if gist_id not in existing_ids:
                 gistsCollection.insert_one(gist_document)
                 return {"message": f"Changes detected for user {gist_author}"}
-            return {"message": f"You are now watching new Gists for the user {gist_author}, page will refresh in 3 hours"}
+            return {"message": f"You are now watching new Gists for the user {gist_author}, page will refresh in 1 minute"}
 
     # Return status code 201 (Created)
     return Response(status_code=201)
@@ -120,16 +118,16 @@ async def get_deals(deal_id: Union[int, None] = None):
     async with httpx.AsyncClient() as client:
         if deal_id:
             # Get a single deal
-            response = await client.get(f'https://nocompanyltd2.pipedrive.com/api/v1/deals/{deal_id}?api_key={PIPEDRIVE_API}')
+            response = await client.get(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals/{deal_id}?api_key={PIPEDRIVE_API}')
         else:
             # Get all deals
-            response = await client.get(f'https://nocompanyltd2.pipedrive.com/api/v1/deals?limit=500&api_token={PIPEDRIVE_API}')
+            response = await client.get(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals?limit=500&api_token={PIPEDRIVE_API}')
         return response.json()
 
 @app.post(f'/api/{VERSION}/deals')
 async def post_deals(deal: dict):
     async with httpx.AsyncClient() as client:
-        response = await client.post(f'https://nocompanyltd2.pipedrive.com/api/v1/deals?api_token={PIPEDRIVE_API}', json=deal)
+        response = await client.post(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals?api_token={PIPEDRIVE_API}', json=deal)
         return response.json()
 
 if __name__ == "__main__":
