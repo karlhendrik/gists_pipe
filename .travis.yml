@@ -1,4 +1,6 @@
 language: python
+python:
+  - "3.9"
 sudo: false
 addons:
   ssh_known_hosts:
@@ -14,6 +16,9 @@ build:
 - provider: script
   skip_cleanup: true
   script:
+  - git clone -b main --depth 1
+  - git-lfs install
+  - git-lfs fetch
   - pip install -r app/requirements.txt
   - cd app
   - pytest
