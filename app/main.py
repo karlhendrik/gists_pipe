@@ -9,7 +9,7 @@ import uvicorn
 import os
 import httpx
 import time
-
+import json
 # Check if connection to database is successful and return the connection
 try:
     client = MongoClient(os.environ.get("MONGO_URI"))
@@ -76,7 +76,7 @@ async def store_gists(username: str):
             if gist_id not in existing_ids:
                 gistsCollection.insert_one(gist_document)
                 return {"message": f"Changes detected for user {gist_author}"}
-            return {"message": f"You are now watching new Gists for the user {gist_author}, page will refresh in 1 minute"}
+            return {"message": f"You are now watching new Gists for the user {gist_author}", "gists": gist_ids}
 
     # Return status code 201 (Created)
     return Response(status_code=201)
@@ -126,8 +126,14 @@ async def get_deals(deal_id: Union[int, None] = None):
 @app.post(f'/api/{VERSION}/deals')
 async def post_deals(deal: dict):
     async with httpx.AsyncClient() as client:
-        response = await client.post(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals?api_token={PIPEDRIVE_API}', json=deal)
-        return response.json()
+        # Check if deal already exists using title parameter as a unique identifier
+        response = await client.get(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals/search?api_token={PIPEDRIVE_API}&term={deal["title"]}')
+        if len(response.json()['data']['items']) == 0:
+            # TODO: Possibly create new Contact in Pipedrive with the Gist author if it doesn't exist
+            response = await client.post(f'https://{COMPANY_NAME}.pipedrive.com/api/v1/deals?api_token={PIPEDRIVE_API}', json=deal)
+            return response.json()
+        else:
+            return {"message": "Deal already exists"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, log_level="info")

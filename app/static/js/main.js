@@ -26,6 +26,7 @@ function getGists(user) {
                 throw new Error('Network response was not ok.');
             }
         }).then(function(data) {
+            localStorage.setItem('gists', JSON.stringify(data.map(gist =>  gist.id )));
             if (data.length === 0) {
                 document.getElementById('alert-no-gists').style.display = 'block';
             } else {
@@ -41,7 +42,7 @@ function getGists(user) {
                     const gistFileType = gist.files[Object.keys(gist.files)[0]].type;
 
                     
-                    // TODO: from security perspective using innerHTML might not be the best idea..
+                    // from security perspective using innerHTML might not be the best idea..
                     document.getElementById('gist-list').innerHTML += '<tr> \
                     <td style="color: whitesmoke;" >' + gistFilename + '</td>' +
                     '<td style="color: whitesmoke;" >' + gistCreated  + '</td>' +
@@ -53,11 +54,7 @@ function getGists(user) {
             }
         }).catch(function(error) {
             console.log('There has been a problem with your fetch operation: ' + error.message);
-        });
-
-    
-
-        
+        });    
 }
 
 function watchGists(){
@@ -79,21 +76,34 @@ function watchGists(){
     ).then(function(data) {
         document.getElementById('alert-watch').innerHTML = data.message;
         document.getElementById('watch-button').innerHTML = 'Waiting for changes...';
+        // TODO: data.gists return an array of gists, but we only need IDs
 
-        // Set timer to retry request in 3 hours
+        // Set timer to retry request in 1 minutes
         setTimeout(function() {
-            watchGists();
-            getGists(user);
             if(data.message === 'Changes detected for user ' + user){
                 document.getElementById('alert-watch').innerHTML = data.message;
             }
+            getGists(user);
+            watchGists(user)
+            
+            // Compare localStorage with data.gists and push new gist to PipeDrive
+            let userGists = data.gists;
+            let localGists = JSON.parse(localStorage.getItem('gists'));
+            
+            if (userGists !== localGists) {
+                // Print diff to console
+                console.log('Changes detected')
+
+            }
         }
-        , 60000);
+        , 10000); // 10 seconds
     }
     ).catch(function(error) {
         console.log('There has been a problem with fetch operation: ' + error.message);
     });
 }
+
+
 
 document.getElementById('gist-list').addEventListener('click', function(e){
     var gistID = e.target.dataset.id;
@@ -111,9 +121,9 @@ document.getElementById('gist-list').addEventListener('click', function(e){
         })
     }).then(function(response) {
         if (response.ok) {
-            console.log('Deal created');
             return response.json();
         } else {
+            console.log(response.status);
             throw new Error('Network response was not ok.');
         }
     }).then(function(data) {
