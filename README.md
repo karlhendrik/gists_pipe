@@ -5,14 +5,19 @@
 [![build-status](https://api.travis-ci.com/karlhendrik/gists_pipe.svg?branch=main)](https://www.travis-ci.com)
 
 
-Gists Pipe is a simple application to fetch user Gists from Github and push each Gist to PipeDrive.
+Gists Pipe is a simple application to fetch user Gists from GitHub and push each Gist to PipeDrive as deal. Application also features a live gists watching. 
 
 ## Installation
 
-Use [Docker](https://docs.docker.com/get-docker/) to build app.
+First you need to copy `.env.example` as `.env`. Then you'll need GitHub and PipeDrive API keys. Also don't forget to update COMPANY_NAME (this is neccesary to make requests to a your company PipeDrive), APP_URL & PROJECT_ROOT values.
+
+Everything is tied together with [Docker](https://docs.docker.com/get-docker/) so you dont need any additional software to run this project. 
 
 ```bash
-TODO
+git clone https://github.com/karlhendrik/gists_pipe.git
+cd gists_pipe/
+cp .env.example .env
+bash ./scripts/build.sh
 ```
 
 ## Contributing

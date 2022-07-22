@@ -75,8 +75,10 @@ async def store_gists(username: str):
         for gist_id in gist_ids:
             if gist_id not in existing_ids:
                 gistsCollection.insert_one(gist_document)
-                return {"message": f"Changes detected for user {gist_author}"}
-            return {"message": f"You are now watching new Gists for the user {gist_author}", "gists": gist_ids}
+                # Syncing changes to the PipeDrive
+                await post_deals({"title": f"{gist_id} - {gist_author}"})
+                return {"message": f"Changes detected! Syncing {gist_author} gists to the PipeDrive", "gists": gist_ids}
+            return {"message": f"You have enabled live updates for the user {gist_author}", "gists": gist_ids}
 
     # Return status code 201 (Created)
     return Response(status_code=201)

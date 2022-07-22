@@ -26,7 +26,6 @@ function getGists(user) {
                 throw new Error('Network response was not ok.');
             }
         }).then(function(data) {
-            localStorage.setItem('gists', JSON.stringify(data.map(gist =>  gist.id )));
             if (data.length === 0) {
                 document.getElementById('alert-no-gists').style.display = 'block';
             } else {
@@ -60,6 +59,7 @@ function getGists(user) {
 function watchGists(){
     let user = document.getElementById('gist-input').value;
     document.querySelector('#alert-watch').style.display = 'block';
+    document.querySelector('#watch-button').innerHTML = "Refresh page to stop"
     
     fetch('http://localhost:8000/api/v1/watch?username=' + user, {
         method: 'POST',
@@ -75,35 +75,22 @@ function watchGists(){
     }
     ).then(function(data) {
         document.getElementById('alert-watch').innerHTML = data.message;
-        document.getElementById('watch-button').innerHTML = 'Waiting for changes...';
-        // TODO: data.gists return an array of gists, but we only need IDs
 
         // Set timer to retry request in 1 minutes
         setTimeout(function() {
-            if(data.message === 'Changes detected for user ' + user){
+            // Not the most elegant and scalable way to do this, but it works for now
+            if(data.message === 'Changes detected'){
                 document.getElementById('alert-watch').innerHTML = data.message;
+                getGists(user);
             }
-            getGists(user);
             watchGists(user)
-            
-            // Compare localStorage with data.gists and push new gist to PipeDrive
-            let userGists = data.gists;
-            let localGists = JSON.parse(localStorage.getItem('gists'));
-            
-            if (userGists !== localGists) {
-                // Print diff to console
-                console.log('Changes detected')
-
-            }
         }
-        , 10000); // 10 seconds
+        , 10000); // 30 seconds
     }
     ).catch(function(error) {
         console.log('There has been a problem with fetch operation: ' + error.message);
     });
 }
-
-
 
 document.getElementById('gist-list').addEventListener('click', function(e){
     var gistID = e.target.dataset.id;

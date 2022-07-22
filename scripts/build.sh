@@ -1,6 +1,6 @@
 
 #!/bin/bash
-PROJECT_ROOT="/home/travis/gists_pipe"
+PROJECT_ROOT=$(env | grep PROJECT_ROOT | cut -d "=" -f2)
 APP_URL=$(env | grep APP_URL | cut -d "=" -f2)
 NETWORK_NAME=$(docker network ls --format "{{.Name}}" | grep nginx)
 CONTAINER_NAME=$(docker ps --format "{{.Names}}" | grep gists_pipe_app)
