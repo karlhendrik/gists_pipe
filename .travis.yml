@@ -21,4 +21,4 @@ install:
 script:
   - cd app
   - pytest
-  - bash ../scripts/deploy.sh
+  - bash deploy.sh
